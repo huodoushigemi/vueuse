@@ -2,13 +2,15 @@
 
 import type { Ref, ShallowRef } from 'vue-demi'
 import { ref, shallowRef } from 'vue-demi'
-import { isFunction, isString, tryOnScopeDispose } from '@vueuse/shared'
+import { tryOnScopeDispose } from '@vueuse/shared'
 import type { ConfigurableWindow } from '../_configurable'
 import { defaultWindow } from '../_configurable'
 
+type PostMessage = typeof Worker.prototype['postMessage']
+
 export interface UseWebWorkerReturn<Data = any> {
   data: Ref<Data>
-  post: typeof Worker.prototype['postMessage']
+  post: PostMessage
   terminate: () => void
   worker: ShallowRef<Worker | undefined>
 }
@@ -51,11 +53,11 @@ export function useWebWorker<Data = any>(
   const data: Ref<any> = ref(null)
   const worker = shallowRef<Worker>()
 
-  const post: typeof Worker.prototype['postMessage'] = function post(val: any) {
+  const post: PostMessage = (...args) => {
     if (!worker.value)
       return
 
-    worker.value.postMessage(val)
+    worker.value.postMessage(...args as Parameters<PostMessage>)
   }
 
   const terminate: typeof Worker.prototype['terminate'] = function terminate() {
@@ -66,9 +68,9 @@ export function useWebWorker<Data = any>(
   }
 
   if (window) {
-    if (isString(arg0))
+    if (typeof arg0 === 'string')
       worker.value = new Worker(arg0, workerOptions)
-    else if (isFunction(arg0))
+    else if (typeof arg0 === 'function')
       worker.value = (arg0 as any)()
     else
       worker.value = arg0

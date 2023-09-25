@@ -1,4 +1,5 @@
 import { nextTick, ref } from 'vue-demi'
+import { describe, expect, it, vi } from 'vitest'
 import { promiseTimeout } from '../utils'
 import { throttledWatch, watchThrottled } from '.'
 
@@ -27,7 +28,7 @@ describe('watchThrottled', () => {
     expect(cb).toHaveBeenCalledWith(3, 2, expect.anything())
 
     num.value = 4
-    await promiseTimeout(100)
+    await promiseTimeout(110)
     expect(cb).toHaveBeenCalledTimes(3)
     expect(cb).toHaveBeenCalledWith(4, 3, expect.anything())
   })

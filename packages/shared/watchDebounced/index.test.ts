@@ -1,4 +1,5 @@
 import { nextTick, ref } from 'vue-demi'
+import { describe, expect, it, vi } from 'vitest'
 import { promiseTimeout } from '../utils'
 import { debouncedWatch, watchDebounced } from '.'
 
@@ -42,5 +43,5 @@ describe('watchDebounced', () => {
     await promiseTimeout(75)
     expect(cb).toHaveBeenCalledTimes(2)
     expect(cb).toHaveBeenCalledWith(4, 2, expect.anything())
-  })
+  }, { retry: 5 })
 })

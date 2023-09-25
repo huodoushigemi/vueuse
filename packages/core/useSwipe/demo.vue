@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { SwipeDirection } from '@vueuse/core'
+import type { UseSwipeDirection } from '@vueuse/core'
 import { useSwipe } from '@vueuse/core'
 
 const target = ref<HTMLElement | null>(null)
@@ -9,13 +9,14 @@ const containerWidth = computed(() => container.value?.offsetWidth)
 const left = ref('0')
 const opacity = ref(1)
 
-const reset = () => {
+function reset() {
   left.value = '0'
   opacity.value = 1
 }
 
 const { direction, isSwiping, lengthX, lengthY } = useSwipe(
-  target, {
+  target,
+  {
     passive: false,
     onSwipe(e: TouchEvent) {
       if (containerWidth.value) {
@@ -30,7 +31,7 @@ const { direction, isSwiping, lengthX, lengthY } = useSwipe(
         }
       }
     },
-    onSwipeEnd(e: TouchEvent, direction: SwipeDirection) {
+    onSwipeEnd(e: TouchEvent, direction: UseSwipeDirection) {
       if (lengthX.value < 0 && containerWidth.value && (Math.abs(lengthX.value) / containerWidth.value) >= 0.5) {
         left.value = '100%'
         opacity.value = 0
@@ -40,7 +41,8 @@ const { direction, isSwiping, lengthX, lengthY } = useSwipe(
         opacity.value = 1
       }
     },
-  })
+  },
+)
 </script>
 
 <template>
@@ -67,7 +69,6 @@ const { direction, isSwiping, lengthX, lengthY } = useSwipe(
   align-items: center;
   justify-content: center;
   border: 2px dashed #ccc;
-  height: 100;
   overflow: hidden;
 }
 

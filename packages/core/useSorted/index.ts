@@ -1,6 +1,7 @@
 import type { Ref } from 'vue-demi'
-import type { MaybeRef } from '@vueuse/shared'
-import { computed, isRef, unref, watchEffect } from 'vue-demi'
+import type { MaybeRefOrGetter } from '@vueuse/shared'
+import { toValue } from '@vueuse/shared'
+import { computed, isRef, watchEffect } from 'vue-demi'
 
 export type UseSortedCompareFn<T = any> = (a: T, b: T) => number
 
@@ -25,16 +26,14 @@ export interface UseSortedOptions<T = any> {
 const defaultSortFn: UseSortedFn = <T>(source: T[], compareFn: UseSortedCompareFn<T>): T[] => source.sort(compareFn)
 const defaultCompare: UseSortedCompareFn<number> = (a, b) => a - b
 
-export function useSorted<T = any>(source: MaybeRef<T[]>, compareFn?: UseSortedCompareFn<T>): Ref<T[]>
-export function useSorted<T = any>(source: MaybeRef<T[]>, options?: UseSortedOptions<T>): Ref<T[]>
-export function useSorted<T = any>(source: MaybeRef<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): Ref<T[]>
 /**
  * reactive sort array
  *
  * @see https://vueuse.org/useSorted
- * @param source source array
- * @param options
  */
+export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>): Ref<T[]>
+export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, options?: UseSortedOptions<T>): Ref<T[]>
+export function useSorted<T = any>(source: MaybeRefOrGetter<T[]>, compareFn?: UseSortedCompareFn<T>, options?: Omit<UseSortedOptions<T>, 'compareFn'>): Ref<T[]>
 export function useSorted(...args: any[]) {
   const [source] = args
   let compareFn: UseSortedCompareFn = defaultCompare
@@ -60,11 +59,11 @@ export function useSorted(...args: any[]) {
   } = options
 
   if (!dirty)
-    return computed(() => sortFn([...unref(source)], compareFn))
+    return computed(() => sortFn([...toValue(source)], compareFn))
 
   // dirty
   watchEffect(() => {
-    const result = sortFn(unref(source), compareFn)
+    const result = sortFn(toValue(source), compareFn)
     if (isRef(source))
       source.value = result
     else

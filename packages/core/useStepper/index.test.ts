@@ -1,4 +1,5 @@
 import { reactive, ref } from 'vue-demi'
+import { describe, expect, it } from 'vitest'
 import { useStepper } from '.'
 
 describe('useStepper', () => {
@@ -7,7 +8,7 @@ describe('useStepper', () => {
   })
 
   describe('common', () => {
-    test('steps are reactive', () => {
+    it('steps are reactive', () => {
       const flag = ref(true)
       const steps = reactive({
         first: {
@@ -34,7 +35,7 @@ describe('useStepper', () => {
         last: 'Last',
       })
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // eslint-disable-next-line ts/ban-ts-comment
       // @ts-expect-error
       stepper.goTo('unexisting step')
       expect(stepper.current.value).toBe('First')

@@ -1,4 +1,5 @@
-import { computed, ref } from 'vue-demi'
+import { computed, isReadonly, ref } from 'vue-demi'
+import { describe, expect, it } from 'vitest'
 import { useTitle } from '.'
 
 describe('useTitle', () => {
@@ -72,16 +73,14 @@ describe('useTitle', () => {
       expect(title.value).toEqual('old title')
       condition.value = true
       expect(title.value).toEqual('new title')
-      // @ts-expect-error readonly
-      title.value = ''
+      expect(isReadonly(title)).toBeTruthy()
     })
 
     it('function', () => {
       const target = () => 'new title'
       const title = useTitle(target)
       expect(title.value).toEqual('new title')
-      // @ts-expect-error readonly
-      title.value = ''
+      expect(isReadonly(title)).toBeTruthy()
     })
   })
 })

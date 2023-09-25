@@ -9,23 +9,23 @@ Extended [`toRefs`](https://v3.vuejs.org/api/refs-api.html#torefs) that also acc
 ## Usage
 
 <!-- eslint-disable array-bracket-spacing -->
-<!-- eslint-disable @typescript-eslint/no-redeclare -->
+<!-- eslint-disable ts/no-redeclare -->
 
 ```ts
 import { toRefs } from '@vueuse/core'
-import { reactive, ref } from 'vue-demi'
+import { reactive, ref } from 'vue'
 
 const objRef = ref({ a: 'a', b: 0 })
 const arrRef = ref(['a', 0])
 
 const { a, b } = toRefs(objRef)
-const [ a, b ] = toRefs(arrRef)
+const [a, b] = toRefs(arrRef)
 
 const obj = reactive({ a: 'a', b: 0 })
 const arr = reactive(['a', 0])
 
 const { a, b } = toRefs(obj)
-const [ a, b ] = toRefs(arr)
+const [a, b] = toRefs(arr)
 ```
 
 ## Use-cases

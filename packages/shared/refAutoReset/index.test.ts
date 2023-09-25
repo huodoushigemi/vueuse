@@ -1,5 +1,6 @@
 import type { Ref } from 'vue-demi'
 import { effectScope, ref } from 'vue-demi'
+import { describe, expect, it } from 'vitest'
 import { promiseTimeout } from '../utils'
 import { autoResetRef, refAutoReset } from '.'
 
@@ -27,6 +28,14 @@ describe('refAutoReset', () => {
 
     await new Promise(resolve => setTimeout(resolve, 100 + 1))
     expect(val.value).toBe('default')
+  })
+
+  it('should be reset with maybeRef', async () => {
+    const val = refAutoReset(() => [123], () => 10)
+    val.value = [999]
+    expect(val.value).toEqual([999])
+    await new Promise(resolve => setTimeout(resolve, 11))
+    expect(val.value).toEqual([123])
   })
 
   it('should change afterMs', async () => {

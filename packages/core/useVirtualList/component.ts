@@ -23,31 +23,23 @@ export interface UseVirtualListProps {
   height: string
 }
 
-export const UseVirtualList = defineComponent<UseVirtualListProps>({
+export const UseVirtualList = /* #__PURE__ */ defineComponent<UseVirtualListProps>({
   name: 'UseVirtualList',
   props: [
     'list',
     'options',
     'height',
   ] as unknown as undefined,
-  setup(props, { slots }) {
+  setup(props, { slots, expose }) {
     const { list: listRef } = toRefs(props)
 
-    const { list, containerProps, wrapperProps } = useVirtualList(listRef, props.options)
+    const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(listRef, props.options)
+    expose({ scrollTo })
 
     typeof containerProps.style === 'object' && !Array.isArray(containerProps.style) && (containerProps.style.height = props.height || '300px')
 
-    return () => h('div',
-      { ...containerProps },
-      [
-        h('div',
-          { ...wrapperProps.value },
-          list.value.map((item: any) => h('div',
-            { style: { overFlow: 'hidden', height: item.height } },
-            slots.default ? slots.default(item) : 'Please set content!',
-          )),
-        ),
-      ],
-    )
+    return () => h('div', { ...containerProps }, [
+      h('div', { ...wrapperProps.value }, list.value.map((item: any) => h('div', { style: { overFlow: 'hidden', height: item.height } }, slots.default ? slots.default(item) : 'Please set content!'))),
+    ])
   },
 })

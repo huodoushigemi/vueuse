@@ -4,16 +4,15 @@ import { useIdle, useTimestamp } from '@vueuse/core'
 
 const { idle, lastActive } = useIdle(5000)
 
-const now = useTimestamp()
+const now = useTimestamp({ interval: 1000 })
 
 const idledFor = computed(() =>
-  Math.floor((now.value - lastActive.value) / 1000),
-)
+  Math.floor((now.value - lastActive.value) / 1000))
 </script>
 
 <template>
   <note class="mb-2">
-    For demonstraction purpose, the idle timeout is set to <b>5s</b> in this
+    For demonstration purpose, the idle timeout is set to <b>5s</b> in this
     demo (default 1min).
   </note>
   <div class="mb-2">

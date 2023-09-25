@@ -1,11 +1,12 @@
 import { effectScope, ref } from 'vue-demi'
 import { promiseTimeout } from '@vueuse/shared'
+import { describe, expect, it, vi } from 'vitest'
 import { useTimeoutPoll } from '.'
 
 describe('useTimeoutPoll', () => {
   function createTests(immediate: boolean) {
     it(`supports reactive intervals when immediate is ${immediate}`, async () => {
-      const callback = vitest.fn()
+      const callback = vi.fn()
       const interval = ref(0)
       const { pause, resume } = useTimeoutPoll(callback, interval, { immediate })
 
@@ -39,7 +40,7 @@ describe('useTimeoutPoll', () => {
     })
 
     it(`should pause when scope dispose and immediate is ${immediate}`, async () => {
-      const callback = vitest.fn()
+      const callback = vi.fn()
       const interval = ref(0)
       const scope = effectScope()
       await scope.run(async () => {

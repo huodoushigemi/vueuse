@@ -5,12 +5,15 @@ import { formatDate, useDebouncedRefHistory } from '@vueuse/core'
 
 import type { Ref } from 'vue'
 
-const format = (ts: number) => formatDate(new Date(ts), 'YYYY-MM-DD HH:mm:ss')
+function format(ts: number) {
+  return formatDate(new Date(ts), 'YYYY-MM-DD HH:mm:ss')
+}
 const delay: Ref<number> = ref(1000)
 
 const { count, inc, dec } = useCounter()
 const { history, undo, redo, canUndo, canRedo } = useDebouncedRefHistory(
-  count, { capacity: 10, debounce: delay },
+  count,
+  { capacity: 10, debounce: delay },
 )
 </script>
 
